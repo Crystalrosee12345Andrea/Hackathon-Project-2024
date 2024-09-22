@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Black background */
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        .quiz-box {
+            background-color: #1a1a1a; /* Darker box */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: auto;
+            width: 50%;
+        }
+        .question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #ffcc00; /* Gold color for questions */
+        }
+        .resources {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-box">
+        <h1 class="question">Your Score: {{ score }} out of {{ total }}</h1>
+        <div class="resources">
+            {% if score == "60/100" %}
+                <p>So you want to learn about finance, but you don’t know where to start? Have no fear, because a wealth of information is at your fingertips, and getting started has never been easier. From a primer on personal finances to advanced securities analysis, anyone interested in learning can gain access to the necessary resources.</p>
+                <p><a href="https://youtu.be/iR7b2NjgAO8?si=JB-EfnBopz8mt2j6" target="_blank" style="color: #ffcc00;">Link 1</a></p>
+                <p><a href="https://youtu.be/DNYCgsyOAW4?si=HoL-wvhQ6raMTYmL" target="_blank" style="color: #ffcc00;">Link 2</a></p>
+            {% elif score == "70/100" %}
+                <p>Good job! You are already on the right track. We know that the earlier you learn the basics of how money works, the more confident and successful you’ll be with your finances later in life. Here are some resources that might help!</p>
+                <p><a href="https://youtu.be/yYX4bvQSqbo?si=NBLIb9t0eNmhPquf" target="_blank" style="color: #ffcc00;">Link 1</a></p>
+                <p><a href="https://open.spotify.com/show/0CDkko5mBOM1Ewle8F9xsT?si=A1MovnQPRrab2-7SlPtc6w" target="_blank" style="color: #ffcc00;">Link 2</a></p>
+            {% elif score == "80/100" %}
+                <p>Good job! You are already on the right track. We know that the earlier you learn the basics of how money works, the more confident and successful you’ll be with your finances later in life. Here are some resources that might help!</p>
+                <p><a href="https://open.spotify.com/show/5hPjolwAPwDhGPTHMfa0ue?si=-U23EMjrSsm6pkhrBDIX6A" target="_blank" style="color: #ffcc00;">Link 1</a></p>
+                <p><a href="https://youtu.be/EJHPltmAULA?si=If1Q45HLuKc1Fo6N" target="_blank" style="color: #ffcc00;">Link 2</a></p>
+            {% elif score == "90/100" %}
+                <p>You are already great at finance! Being financially literate means having the knowledge and confidence to effectively manage, save, and invest money for you and your family. Here are some resources which might take your knowledge to the next level!</p>
+                <p><a href="https://youtu.be/3JB-S4XlVug?si=venwH-gqlv0gXHUb" target="_blank" style="color: #ffcc00;">Link 1</a></p>
+                <p><a href="https://open.spotify.com/show/5D0oX4Ip01hi9N0clndHZY?si=yOpWHeBbQya-UfznCFaXaQ" target="_blank" style="color: #ffcc00;">Link 2</a></p>
+                <p><a href="https://open.spotify.com/show/1ZpUmASkxeRmJsukPXWQT2?si=HwGTJ-HeQ6SfGkxo7m9ZHg" target="_blank" style="color: #ffcc00;">Link 3</a></p>
+            {% endif %}
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+<script>
+    function triggerConfetti() {
+        const duration = 2 * 1000; // 2 seconds
+        const animationEnd = Date.now() + duration;
+
+        (function frame() {
+            // Launch the confetti
+            confetti({
+                particleCount: 5,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+            });
+            confetti({
+                particleCount: 5,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+            });
+
+            if (Date.now() < animationEnd) {
+                requestAnimationFrame(frame);
+            }
+        }());
+    }
+
+    // Trigger confetti when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        triggerConfetti();
+    });
+</script>
+</body>
+</html>
