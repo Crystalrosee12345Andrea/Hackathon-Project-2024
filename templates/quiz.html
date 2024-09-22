@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Black background */
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        .quiz-box {
+            background-color: #1a1a1a; /* Darker box */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: auto;
+            width: 50%;
+        }
+        .question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #ffcc00; /* Gold color for questions */
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .options label {
+            font-size: 1.2em;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .options label:hover {
+            color: #00ff00; /* Green on hover */
+        }
+        .highlight {
+            background-color: #00ff00; /* Green highlight */
+            color: #000; /* Black text */
+        }
+        .question-count {
+            font-size: 1em;
+            margin-bottom: 10px;
+            color: #ffcc00;
+        }
+        .progress-bar {
+            background-color: #444; /* Bar background */
+            border-radius: 5px;
+            height: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .progress {
+            background-color: #00ff00; /* Progress color */
+            height: 100%;
+            width: 0; /* Set width in JavaScript */
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        .next-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ffcc00; /* Yellow button */
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .next-button:hover {
+            background-color: #ffaa00; /* Darker yellow on hover */
+        }
+        #robot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 120px; /* Increased size */
+            animation: sleep 2s forwards;
+        }
+        #new-robot {
+            position: fixed;
+            bottom: 20px;
+            right: 130px; /* Adjust position as needed */
+            width: 130px; /* Slightly larger size */
+            display: none; /* Initially hidden */
+            animation: jump 0.5s infinite; /* Faster jump animation */
+        }
+        @keyframes sleep {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes dance {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(-10px); }
+            50% { transform: translateY(0); }
+            75% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); } /* Higher jump */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="quiz-box">
+        <div class="question-count">Question {{ question_number }} out of {{ total_questions }}</div>
+        <div class="progress-bar">
+            <div class="progress" style="width: {{ (question_number - 1) / total_questions * 100 }}%;"></div>
+        </div>
+        <h1 class="question">{{ question_data['question'] }}</h1>
+        <form method="post" action="{{ url_for('next_question', question_index=question_number - 1) }}">
+            <div class="options">
+                {% for option in question_data['options'] %}
+                    <label onclick="animateOption(this)">
+                        <input type="radio" name="answer" value="{{ option }}" required style="display:none;"> {{ option }}
+                    </label>
+                {% endfor %}
+            </div>
+            <button type="submit" class="next-button">Next</button>
+        </form>
+    </div>
+
+    <img id="robot" src="https://ouch-cdn2.icons8.com/VJvwOvJpGmXPVrMswVTcnCiaNCVALzaiAETdlmFKtqA/rs:fit:324:456/extend:false/wm:1:re:0:0:0.8/wmid:ouch/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvMTgy/LzcxMWRhNWM4LTVj/YzYtNGI1Mi1hMTBj/LTkwNTVkNGFmODA4/OS5wbmc.png" alt="Dancing Robot">
+
+    <img id="new-robot" src="https://ouch-cdn2.icons8.com/u3JhTHf6mnErMLmvrDB-5dlf89u-fNFLED5Q_mCgj-o/rs:fit:368:447/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvOTM1/LzAwYmFlMTQyLTM3/Y2EtNDlkNS04OTVk/LWNhOGZlNmE1MDg4/OS5wbmc.png" alt="New Robot">
+
+    <script>
+        function animateOption(label) {
+            // Highlight the selected option
+            const options = document.querySelectorAll('.options label');
+            options.forEach(option => option.classList.remove('highlight'));
+            label.classList.add('highlight');
+
+            // Jump animation
+            label.style.transform = 'translateY(-10px)'; // Jump up
+            setTimeout(() => {
+                label.style.transform = 'translateY(0)'; // Jump down
+            }, 200);
+
+            // Trigger robot dance
+            document.getElementById('robot').style.animation = 'dance 0.5s';
+            document.getElementById('robot').style.display = 'none'; // Hide the first robot
+            document.getElementById('new-robot').style.display = 'block'; // Show the new robot image
+        }
+
+        // Check if the form is submitted
+        document.querySelector('form').addEventListener('submit', function() {
+            // Keep the new robot image visible while waiting for the next question
+            setTimeout(() => {
+                document.getElementById('new-robot').style.display = 'none'; // Hide it after a brief delay if desired
+                document.getElementById('robot').style.display = 'block'; // Show the original robot again
+            }, 2000); // Adjust time as needed
+        });
+
+        function triggerConfetti() {
+            const duration = 2 * 1000; // 2 seconds
+            const animationEnd = Date.now() + duration;
+
+            (function frame() {
+                // Launch the confetti
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                });
+
+                if (Date.now() < animationEnd) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Check if result page to trigger confetti
+        window.onload = function() {
+            {% if request.endpoint == 'result.html' %}
+                triggerConfetti();
+            {% endif %}
+        };
+    </script>
+</body>
+</html>
